@@ -43,7 +43,7 @@ app.get('/new/:url(*)', function (req, res) {
 
 app.get('/:id', function (req, res) {
   Url.findOne({_id: req.params.id}, function (err, url) {
-    if (err) throw err;
+    if (err) return res.end();
     if (url) {
       res.redirect(url.url);
     } else {
