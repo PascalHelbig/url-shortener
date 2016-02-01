@@ -25,18 +25,24 @@ app.get('/new/:url(*)', function (req, res) {
   Url.findOne({url: req.params.url}, function (err, url) {
     if (err) throw err;
     if (url) {
-      return res.json(url);
+      return res.json(outputUrl(url));
     } else {
       var newUrl = new Url({url: req.params.url});
       newUrl.save(function (err, url) {
         if (err) throw err;
-        res.json(url);
+        res.json(outputUrl(url));
       });
     }
   });
-
 });
 
 app.listen(8080, function () {
   console.log('server running on port 8080');
 });
+
+function outputUrl(url) {
+  return {
+    original_url: url.url,
+    short_url: "localhost:8080/" + url._id
+  };
+}
