@@ -2,6 +2,8 @@ var express = require('express');
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 var validator = require('validator');
+var fs = require('fs');
+var markdown = require('markdown').markdown;
 
 mongoose.connect('mongodb://192.168.99.100/urlshortener');
 var db = mongoose.connection;
@@ -19,7 +21,12 @@ var Url = mongoose.model('url', urlSchema);
 var app = express();
 
 app.get('/', function (req, res) {
-  res.send('Hello World!');
+  fs.readFile('README.md', function (err, data) {
+    if (err) {
+      return console.error(err);
+    }
+    res.send(markdown.toHTML(data.toString()));
+  });
 });
 
 app.get('/new/:url(*)', function (req, res) {
