@@ -36,6 +36,17 @@ app.get('/new/:url(*)', function (req, res) {
   });
 });
 
+app.get('/:id', function (req, res) {
+  Url.findOne({_id: req.params.id}, function (err, url) {
+    if (err) throw err;
+    if (url) {
+      res.redirect(url.url);
+    } else {
+      res.json({error: "No short url found for given input"})
+    }
+  });
+});
+
 app.listen(8080, function () {
   console.log('server running on port 8080');
 });
