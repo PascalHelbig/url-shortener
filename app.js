@@ -1,6 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
+var validator = require('validator');
 
 mongoose.connect('mongodb://192.168.99.100/urlshortener');
 var db = mongoose.connection;
@@ -22,6 +23,10 @@ app.get('/', function (req, res) {
 });
 
 app.get('/new/:url(*)', function (req, res) {
+  if (!validator.isURL(req.params.url)) {
+    return res.json({error: "URL invalid"});
+  }
+
   Url.findOne({url: req.params.url}, function (err, url) {
     if (err) throw err;
     if (url) {
